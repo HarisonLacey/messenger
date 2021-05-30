@@ -6,7 +6,7 @@ const options = {
   site: process.env.NEXTAUTH_URL,
   providers: [
     // email provider setup
-    Providers.Email({
+    /* Providers.Email({
       server: {
         port: 465,
         host: "smtp.gmail.com",
@@ -20,7 +20,7 @@ const options = {
         },
       },
       from: process.env.EMAIL_USERNAME,
-    }),
+    }), */
     // google provider setup
     Providers.Google({
       clientId: process.env.GOOGLE_ID,

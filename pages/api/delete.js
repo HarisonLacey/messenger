@@ -13,9 +13,9 @@ export default async (req, res) => {
       await User.findByIdAndUpdate(session.user.id, {
         $pull: { messages: { code: id } },
       });
-      res.status(200).json({ message: "Message Deleted!" });
+      res.status(200).json({ message: "Message deleted" });
     } catch (err) {
-      res.status(400).json({ message: "Try Again!" });
+      res.status(400).json({ message: "Try again" });
     }
   } else {
     res.status(400).json({ message: "please login" });

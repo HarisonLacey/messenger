@@ -13,7 +13,7 @@ export default async (req, res) => {
       await User.findByIdAndUpdate(session.user.id, {
         $pull: { messages: { user_id: id } },
       });
-      res.status(200).json({ message: "Chat Deleted!" });
+      res.status(200).json({ message: "Chat deleted" });
     } catch (err) {
       res.status(400).json({ message: err.message });
     }

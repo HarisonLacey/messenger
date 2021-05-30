@@ -15,6 +15,7 @@ import styled, { keyframes, css } from "styled-components";
 const UserBox = styled.div`
   text-align: center;
   margin-right: 10%;
+  margin-bottom: 4%;
   p {
     margin: 0;
   }
@@ -80,36 +81,48 @@ export default function Dashboard({ profile, users }) {
   useEffect(() => {
     users[0] ? setAble(false) : setAble(true);
   }, [users]);
-  useEffect(() => {
+  useEffect(async () => {
     if (firstRend && users[0]) {
       router.replace("/dashboard");
       setUserMessages([]);
       setId(users[0].user_id);
-      profile.messages.forEach((el) => {
-        if (el.user_id === users[0].user_id) {
-          setUserMessages((userMessages) => [...userMessages, el]);
-        }
-      });
+      try {
+        await profile.messages.forEach((el) => {
+          if (el.user_id === users[0].user_id) {
+            setUserMessages((userMessages) => [...userMessages, el]);
+          }
+        });
+      } catch (err) {
+        console.log(err.message);
+      }
     }
   }, []);
-  useEffect(() => {
+  useEffect(async () => {
     if (!firstRend && users[0]) {
       setUserMessages([]);
-      profile.messages.forEach((el) => {
-        if (el.user_id === id) {
+      try {
+        await profile.messages.forEach((el) => {
+          if (el.user_id === id) {
+            setUserMessages((userMessages) => [...userMessages, el]);
+          }
+        });
+      } catch (err) {
+        console.log(err.message);
+      }
+    }
+  }, [profile]);
+  const Messages = async (e) => {
+    setId(e.target.id);
+    setUserMessages([]);
+    try {
+      await profile.messages.forEach((el) => {
+        if (el.user_id === e.target.id) {
           setUserMessages((userMessages) => [...userMessages, el]);
         }
       });
+    } catch (err) {
+      console.log(err.message);
     }
-  }, [profile]);
-  const Messages = (e) => {
-    setId(e.target.id);
-    setUserMessages([]);
-    profile.messages.forEach((el) => {
-      if (el.user_id === e.target.id) {
-        setUserMessages((userMessages) => [...userMessages, el]);
-      }
-    });
   };
   const toFrom = useCallback((el, value) => {
     if (el) {
@@ -179,24 +192,30 @@ export default function Dashboard({ profile, users }) {
                     <UserBox>
                       <div
                         style={{
-                          cursor: "pointer",
                           backgroundColor: "#caf7e3",
                           padding: "2%",
                           borderRadius: "2%",
                         }}
-                        onClick={Messages}
                       >
-                        <p id={e.user_id}>
-                          <strong>{e.user_profile.name}</strong>
+                        <p
+                          id={e.user_id}
+                          onClick={Messages}
+                          style={{ fontWeight: "bold", cursor: "pointer" }}
+                        >
+                          {e.user_profile.name}
                         </p>
                         <p>{e.user_profile.city}</p>
                       </div>
                       <button
-                        style={{ border: "none", fontSize: "0.7em" }}
+                        style={{
+                          border: "none",
+                          fontSize: "0.7em",
+                          marginLeft: "2%",
+                        }}
                         id={e.user_id}
                         onClick={DeleteChat}
                       >
-                        Delete Chat
+                        Delete
                       </button>
                     </UserBox>
                   ))}

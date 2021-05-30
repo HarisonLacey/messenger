@@ -22,6 +22,7 @@ export default function Profile({ profile }) {
   }, []);
   const profileUpdate = async (e) => {
     e.preventDefault();
+    setResponse("Saving...")
     try {
       const res = await axios.post("api/profile", {
         name: name,
@@ -34,7 +35,7 @@ export default function Profile({ profile }) {
     }
   };
   return (
-    <Layout>
+    <Layout title="Profile">
       <Container fluid>
         <Row style={{ textAlign: "center" }} noGutters>
           <Col xs={12}>
@@ -61,6 +62,7 @@ export default function Profile({ profile }) {
                   margin: "2% auto",
                   width: "70%",
                   textAlign: "center",
+                  height: "50px"
                 }}
                 required
                 onChange={(e) => setName(e.target.value)}
@@ -73,6 +75,7 @@ export default function Profile({ profile }) {
                   margin: "2% auto",
                   width: "70%",
                   textAlign: "center",
+                  height: "50px"
                 }}
                 required
                 onChange={(e) => setCity(e.target.value)}

@@ -58,7 +58,7 @@ export default function UserItem({ user }) {
     }
   };
   return (
-    <Layout>
+    <Layout title="User">
       {router.isFallback ? (
         <div>Loading...</div>
       ) : (
@@ -103,7 +103,7 @@ export default function UserItem({ user }) {
               </form>
             </Col>
             <Col xs={12}>
-              {response === "Message Sent!" && (
+              {response === "Message sent" && (
                 <Link href="/dashboard">
                   <button
                     style={{
@@ -117,7 +117,7 @@ export default function UserItem({ user }) {
                     disabled={lock}
                   >
                     <strong>
-                      <a>Continue in Dashboard</a>
+                      <a>Continue chat in dashboard</a>
                     </strong>
                   </button>
                 </Link>

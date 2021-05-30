@@ -15,10 +15,10 @@ export default async (req, res) => {
         city: city,
         newUser: false,
       });
-      res.status(200).json({ message: "Profile Saved!" });
+      res.status(200).json({ message: "Profile saved" });
     } catch (err) {
       console.log(err.message);
-      res.status(400).json({ message: "Try Again!" });
+      res.status(400).json({ message: "Try again" });
     }
   } else {
     res.status(400).json({ message: "please login" });

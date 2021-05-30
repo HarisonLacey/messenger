@@ -52,10 +52,10 @@ export default async (req, res) => {
         )
       );
       await userSent.save();
-      res.status(200).json({ message: "Message Sent!" });
+      res.status(200).json({ message: "Message sent" });
     } catch (err) {
       console.log(err.message);
-      res.status(400).json({ message: "Try Again!" });
+      res.status(400).json({ message: "Try again" });
     }
   } else {
     res.status(400).json({ message: "Please login" });
