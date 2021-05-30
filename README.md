@@ -1,8 +1,10 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a messenger app built using Next.js and Next Auth.
 
 ## Getting Started
 
-First, run the development server:
+Create .env.local file and setup environment variables.
+
+Run the development server:
 
 ```bash
 npm run dev
