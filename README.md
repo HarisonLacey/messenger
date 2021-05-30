@@ -4,16 +4,16 @@ This is a messenger app built using Next.js and Next Auth.
 
 Create .env.local file and setup environment variables:
 
--MONGODB_URI=
--NEXTAUTH_URL=
--EMAIL_USERNAME=
--EMAIL_PASSWORD=
--EMAIL_FROM=
--SECRET=
--GOOGLE_ID=
--GOOGLE_CLIENT=
--FACEBOOK_ID=
--FACEBOOK_CLIENT=
+- MONGODB_URI=
+- NEXTAUTH_URL=
+- EMAIL_USERNAME=
+- EMAIL_PASSWORD=
+- EMAIL_FROM=
+- SECRET=
+- GOOGLE_ID=
+- GOOGLE_CLIENT=
+- FACEBOOK_ID=
+- FACEBOOK_CLIENT=
 
 Run the development server:
 
