@@ -2,6 +2,8 @@ import User from "../../models/user";
 import dbConnect from "../../util/mongodb";
 import { getSession } from "next-auth/client";
 
+// delete chate api
+
 export default async (req, res) => {
   const { id } = req.body;
   const session = await getSession({ req });

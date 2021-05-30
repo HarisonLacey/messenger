@@ -1,5 +1,7 @@
 import { useContext, createContext } from "react";
 
+// context wrapper
+
 const NewContext = createContext();
 
 export function ContextWrapper({ children, data }) {

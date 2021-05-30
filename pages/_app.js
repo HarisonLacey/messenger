@@ -9,7 +9,7 @@ function MyApp({ Component, pageProps }) {
     <>
       <GlobalStyle />
       <ThemeProvider theme={themes}>
-        <ContextWrapper data={{ message: "Click Me!" }}>
+        <ContextWrapper data={{ message: "context wrapper" }}>
           <Provider session={session}>
             <Component {...pageProps} />
           </Provider>

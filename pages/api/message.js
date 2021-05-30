@@ -3,6 +3,8 @@ import dbConnect from "../../util/mongodb";
 import { getSession } from "next-auth/client";
 import crypto from "crypto";
 
+// save message api
+
 export default async (req, res) => {
   class Message {
     constructor(type, id, name, email, city, message, date, code) {
@@ -22,9 +24,8 @@ export default async (req, res) => {
   if (session) {
     try {
       await dbConnect();
-      let userRecieve = await User.findById(id),
+      const userRecieve = await User.findById(id),
         userSent = await User.findById(session.user.id);
-      console.log(userRecieve);
       await userRecieve.messages.unshift(
         new Message(
           "from",

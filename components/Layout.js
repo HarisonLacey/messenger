@@ -1,11 +1,18 @@
 import Head from "next/head";
 import Header from "../components/Header";
 
-export default function Layout({ children, title }) {
+// layout component
+
+export default function Layout({ children, ...rest }) {
   return (
     <>
       <Head>
-        <title>{title}</title>
+        <title>{rest.title}</title>
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap"
+          rel="stylesheet"
+        ></link>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <link rel="icon" href="/images/fav.png" />
         <link
@@ -16,10 +23,10 @@ export default function Layout({ children, title }) {
         />
       </Head>
       <header>
-        <Header />
+        <Header name="header" description="menu header" />
       </header>
-      <main>{children}</main>
-      <footer>Footer</footer>
+      <main style={{ paddingTop: "100px", minHeight: "500px" }}>{children}</main>
+      <footer style={{ height: "100px", borderTop: "solid 1px", marginTop: "1%" }}></footer>
     </>
   );
 }

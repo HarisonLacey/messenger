@@ -2,7 +2,8 @@ import User from "../../models/user";
 import dbConnect from "../../util/mongodb";
 import { getSession } from "next-auth/client";
 
-// api to find user via session and make updates
+// update profile api
+
 export default async (req, res) => {
   const { name, city } = req.body;
   const session = await getSession({ req });

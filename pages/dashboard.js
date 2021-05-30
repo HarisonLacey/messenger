@@ -7,20 +7,82 @@ import Layout from "../components/Layout";
 import { useRouter } from "next/router";
 import { Container, Row, Col } from "react-bootstrap";
 import { firstRender } from "../hooks/render";
+import Link from "next/link";
+import styled, { keyframes, css } from "styled-components";
 
 // user dashboard
+
+const UserBox = styled.div`
+  text-align: center;
+  margin-right: 10%;
+  p {
+    margin: 0;
+  }
+  p:first-child {
+    border-bottom: solid 1px;
+  }
+`;
+
+const buttonAnimation = keyframes`
+0% { width: 100%}
+50% { width: 90% }
+100% { width: 100%}
+`;
+
+const SendButton = styled.button.attrs(({ message }) => ({
+  hover:
+    message &&
+    css`
+      ${buttonAnimation} 1s infinite
+    `,
+}))`
+  cursor: pointer;
+  width: 100%;
+  border: none;
+  height: 50px;
+  background-color: ${({ theme }) => theme.colors.blue};
+  :hover {
+    animation: ${({ hover }) => hover};
+  }
+`;
+
+const MessageContainer = styled.div.attrs(({ message }) => ({
+  display: message && "flex",
+  reverse: message && "column-reverse",
+}))`
+  display: ${({ display }) => display};
+  flex-direction: ${({ reverse }) => reverse};
+  height: 500px;
+  overflow: auto;
+  background-color: whitesmoke;
+  padding: 2%;
+  border-radius: 2%;
+`;
+
+const Find = styled.h4`
+  cursor: pointer;
+  :hover {
+    text-decoration: underline;
+  }
+`;
+
 export default function Dashboard({ profile, users }) {
   const [userMessages, setUserMessages] = useState([]);
   const [response, setResponse] = useState("Send");
   const [message, setMessage] = useState();
   const [id, setId] = useState();
+  const [able, setAble] = useState(false);
   const firstRend = firstRender();
   const router = useRouter();
   const refreshData = () => {
     router.replace(router.asPath);
   };
   useEffect(() => {
-    if (firstRend) {
+    users[0] ? setAble(false) : setAble(true);
+  }, [users]);
+  useEffect(() => {
+    if (firstRend && users[0]) {
+      router.replace("/dashboard");
       setUserMessages([]);
       setId(users[0].user_id);
       profile.messages.forEach((el) => {
@@ -31,8 +93,7 @@ export default function Dashboard({ profile, users }) {
     }
   }, []);
   useEffect(() => {
-    if (!firstRend) {
-      console.log("render");
+    if (!firstRend && users[0]) {
       setUserMessages([]);
       profile.messages.forEach((el) => {
         if (el.user_id === id) {
@@ -53,7 +114,7 @@ export default function Dashboard({ profile, users }) {
   const toFrom = useCallback((el, value) => {
     if (el) {
       value === "to"
-        ? (el.style.backgroundColor = "#9fe6a0")
+        ? (el.style.backgroundColor = "#c6ffc1")
         : (el.style.backgroundColor = "#f5f7b2");
       value === "to"
         ? (el.style.marginLeft = "50%")
@@ -62,21 +123,21 @@ export default function Dashboard({ profile, users }) {
   }, []);
   const Delete = async (e) => {
     try {
-      let res = await axios.post("api/delete", {
+      await axios.post("api/delete", {
         id: e.target.id,
       });
       userMessages.splice(e.target.className, 1);
       setUserMessages(userMessages);
-      setResponse(res.data.message);
       refreshData();
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
     }
   };
   const sendMessage = async (e) => {
     e.preventDefault();
+    setResponse("Sending...");
     try {
-      let res = await axios.post("api/message", {
+      const res = await axios.post("api/message", {
         message: message,
         id: id,
       });
@@ -86,75 +147,122 @@ export default function Dashboard({ profile, users }) {
         setResponse("Send");
       }, 5000);
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
     }
   };
   const DeleteChat = async (e) => {
     try {
-      let res = await axios.post("api/deleteChat", {
+      await axios.post("api/deleteChat", {
         id: e.target.id,
       });
-      setResponse(res.data.message);
       setUserMessages([]);
       refreshData();
     } catch (err) {
       console.log(err.message);
     }
   };
+  const resetText = useCallback(
+    (el) => {
+      if (el) el.value = "";
+    },
+    [profile]
+  );
   return (
-    <Layout>
+    <Layout title="Dashboard">
       <Container fluid>
-        <Row style={{ minHeight: "500px" }} noGutters>
+        <Row style={{ minHeight: "720px" }} noGutters>
           <Col xs={3} md={2}>
-            {users.map((e) => (
-              <>
-                <p id={e.user_id} onClick={Messages}>
-                  {e.user_profile.name}
-                </p>
-                <button id={e.user_id} onClick={DeleteChat}>
-                  Delete Chat
-                </button>
-              </>
-            ))}
-          </Col>
-          <Col style={{ position: "relative" }} xs={9} md={10}>
-            <div
-              style={{
-                height: "400px",
-                overflow: "auto",
-                display: "flex",
-                flexDirection: "column-reverse",
-              }}
-            >
-              {userMessages.map((e, index) => (
-                <p
-                  style={{
-                    minHeight: "50px",
-                    borderRadius: "2%",
-                    width: "50%",
-                    padding: "0.5%",
-                  }}
-                  id={e.code}
-                  className={index}
-                  onClick={Delete}
-                  ref={(el) => toFrom(el, e.type)}
-                >
-                  {e.message}
-                </p>
-              ))}
+            <div style={{ height: "500px", overflow: "auto" }}>
+              {users[0] ? (
+                <>
+                  {users.map((e) => (
+                    <UserBox>
+                      <div
+                        style={{
+                          cursor: "pointer",
+                          backgroundColor: "#caf7e3",
+                          padding: "2%",
+                          borderRadius: "2%",
+                        }}
+                        onClick={Messages}
+                      >
+                        <p id={e.user_id}>
+                          <strong>{e.user_profile.name}</strong>
+                        </p>
+                        <p>{e.user_profile.city}</p>
+                      </div>
+                      <button
+                        style={{ border: "none", fontSize: "0.7em" }}
+                        id={e.user_id}
+                        onClick={DeleteChat}
+                      >
+                        Delete Chat
+                      </button>
+                    </UserBox>
+                  ))}
+                </>
+              ) : (
+                <Link href="/">
+                  <Find>
+                    <a>Find users</a>
+                  </Find>
+                </Link>
+              )}
             </div>
+          </Col>
+          <Col xs={9} md={10}>
+            <MessageContainer message={userMessages[0]}>
+              {userMessages[0] ? (
+                <>
+                  {userMessages.map((e, index) => (
+                    <p
+                      style={{
+                        minHeight: "50px",
+                        borderRadius: "2%",
+                        width: "50%",
+                        padding: "0.5%",
+                        cursor: "pointer",
+                      }}
+                      id={e.code}
+                      className={index}
+                      onClick={Delete}
+                      ref={(el) => toFrom(el, e.type)}
+                    >
+                      {e.message}
+                    </p>
+                  ))}
+                </>
+              ) : (
+                <h4 style={{ textAlign: "center" }}>No messages</h4>
+              )}
+            </MessageContainer>
             <form
-              style={{ position: "absolute", bottom: "0", width: "100%" }}
+              style={{
+                position: "absolute",
+                bottom: "4%",
+                width: "100%",
+                textAlign: "center",
+              }}
               onSubmit={sendMessage}
             >
               <textarea
+                ref={resetText}
+                disabled={able}
                 style={{ width: "100%", maxHeight: "100px" }}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="message"
+                required
               />
-              <button style={{ width: "100%" }} type="submit">
-                {response}
-              </button>
+              <SendButton
+                disabled={able}
+                message={userMessages[0]}
+                type="submit"
+              >
+                <strong>{response}</strong>
+              </SendButton>
+              {userMessages[0] && (
+                <p style={{ paddingTop: "2%" }}>Click on messages to delete</p>
+              )}
             </form>
           </Col>
         </Row>
@@ -178,6 +286,15 @@ export async function getServerSideProps(ctx) {
     try {
       await dbConnect();
       var user = await User.findById(session.user.id);
+      if (user === null) {
+        ctx.res.writeHead(302, { Location: "/" });
+        ctx.res.end();
+        return {
+          props: {
+            user: {},
+          },
+        };
+      }
     } catch (err) {
       console.log(err.message);
     }
@@ -197,10 +314,9 @@ export async function getServerSideProps(ctx) {
         await JSON.parse(JSON.stringify(userFind.messages)).forEach((e) => {
           array.findIndex((el) => el.user_id == e.user_id) === -1
             ? array.push(e)
-            : console.log("user exists");
+            : null;
         });
         array.splice(0, 1);
-        console.log(array);
         return {
           props: {
             profile: JSON.parse(JSON.stringify(userFind)),
@@ -208,7 +324,7 @@ export async function getServerSideProps(ctx) {
           },
         };
       } catch (err) {
-        console.log(err);
+        console.log(err.message);
       }
     }
   }
